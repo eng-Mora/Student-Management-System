@@ -9,14 +9,24 @@
     <style>
         :root {
             --primary-color: #3498db;
+            --primary-dark: #2980b9;
             --secondary-color: #2c3e50;
-            --background-color: #ecf0f1;
-            --text-color: #333;
-            --light-text: #fff;
-            --border-radius: 10px;
-            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            --success-color: #2ecc71;
+            --secondary-light: #34495e;
+            --background-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+            --text-light: #7f8c8d;
+            --light-text: #ffffff;
+            --border-color: #ddd;
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --box-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --success-color: #27ae60;
             --error-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #3498db;
+            --font-family: 'Tajawal', 'Cairo', sans-serif;
         }
 
         * {
@@ -26,45 +36,71 @@
         }
 
         body {
-            font-family: 'Tajawal', 'Arial', sans-serif;
+            font-family: var(--font-family);
             background-color: var(--background-color);
             color: var(--text-color);
             line-height: 1.6;
-            padding: 20px;
+            padding: 0;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .container {
+            width: 100%;
             max-width: 1000px;
             margin: 0 auto;
-            background-color: var(--light-text);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            overflow: hidden;
+            padding: 0 15px;
         }
 
         header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: var(--light-text);
-            padding: 25px;
+            padding: 25px 20px;
             text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 25px;
         }
 
         h1 {
             margin-bottom: 10px;
-            font-size: 28px;
+            font-size: 1.75rem;
+            font-weight: 700;
         }
 
+        .header-description {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 8px;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--light-text);
+        }
+
+        /* Search Section */
         .search-section {
-            padding: 25px;
-            background-color: var(--light-text);
-            border-bottom: 1px solid #eee;
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 25px;
         }
 
         .search-box {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .search-box {
+                flex-direction: row;
+            }
         }
 
         .search-input-container {
@@ -74,39 +110,44 @@
 
         input[type="text"] {
             width: 100%;
-            padding: 15px 45px 15px 15px;
-            border: 2px solid #ddd;
+            padding: 16px 50px 16px 16px;
+            border: 2px solid var(--border-color);
             border-radius: var(--border-radius);
-            font-size: 16px;
-            transition: border-color 0.3s;
-            background-color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: var(--card-bg);
+            font-family: var(--font-family);
         }
 
         input[type="text"]:focus {
             border-color: var(--primary-color);
             outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
 
         .search-icon {
             position: absolute;
-            left: 15px;
+            left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: #999;
+            color: var(--text-light);
+            font-size: 1.2rem;
         }
 
         .btn {
-            padding: 15px 25px;
+            padding: 16px 24px;
             border: none;
             border-radius: var(--border-radius);
             cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 600;
             transition: all 0.3s;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            font-family: var(--font-family);
+            white-space: nowrap;
         }
 
         .btn-primary {
@@ -115,90 +156,182 @@
         }
 
         .btn-primary:hover {
-            background-color: #2980b9;
+            background-color: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: var(--box-shadow-hover);
         }
 
-        .btn-share {
-            background-color: #9b59b6;
-            color: white;
+        /* Student Data Section */
+        .student-data {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-bottom: 25px;
+            display: none;
         }
 
-        .btn-share:hover {
-            background-color: #8e44ad;
-            transform: translateY(-2px);
+        .student-header {
+            background: linear-gradient(135deg, var(--secondary-color), var(--secondary-light));
+            color: var(--light-text);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .student-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .student-code {
+            opacity: 0.9;
+            font-size: 1rem;
         }
 
         .student-info {
             padding: 20px;
         }
 
+        .section-title {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        @media (min-width: 576px) {
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         .info-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
+            background-color: #f8f9fa;
+            padding: 16px;
+            border-radius: var(--border-radius-sm);
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .info-item:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
         }
 
         .info-item .label {
-            font-weight: bold;
-            color: #2c3e50;
+            font-weight: 600;
+            color: var(--secondary-color);
         }
 
+        .info-item .value {
+            color: var(--text-light);
+        }
+
+        /* Attendance Section */
         .attendance-section {
-            margin: 30px 0;
+            padding: 0 20px 20px;
+        }
+
+        .attendance-table-container {
+            overflow-x: auto;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
         }
 
         .attendance-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        .attendance-table th, .attendance-table td {
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #ddd;
+            min-width: 600px;
         }
 
         .attendance-table th {
-            background-color: #f2f2f2;
-            font-weight: bold;
+            background-color: #f8f9fa;
+            padding: 14px 12px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .attendance-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .attendance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .attendance-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
 
         .status.present {
-            color: #27ae60;
-            font-weight: bold;
+            background-color: rgba(39, 174, 96, 0.15);
+            color: var(--success-color);
         }
 
         .status.absent {
-            color: #e74c3c;
-            font-weight: bold;
+            background-color: rgba(231, 76, 60, 0.15);
+            color: var(--error-color);
         }
 
+        /* Share Section */
+        .share-section {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-share {
+            background-color: #9b59b6;
+            color: white;
+            padding: 14px 28px;
+        }
+
+        .btn-share:hover {
+            background-color: #8e44ad;
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow-hover);
+        }
+
+        /* No Data */
         .no-data {
             text-align: center;
-            padding: 30px;
-            color: #7f8c8d;
+            padding: 40px 20px;
+            color: var(--text-light);
             font-style: italic;
         }
 
+        /* Loader */
         .loader {
             border: 4px solid #f3f3f3;
             border-top: 4px solid var(--primary-color);
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin: 40px auto;
             display: none;
         }
 
@@ -207,20 +340,93 @@
             100% { transform: rotate(360deg); }
         }
 
-        .share-section {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: var(--border-radius);
+        /* Footer */
+        footer {
             text-align: center;
+            padding: 20px;
+            margin-top: auto;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            header {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header-description {
+                font-size: 0.9rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 14px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .student-name {
+                font-size: 1.3rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+            }
+            
+            .info-item {
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .search-section {
+                padding: 15px;
+            }
+            
+            .student-header {
+                padding: 15px;
+            }
+            
+            .student-info, .attendance-section {
+                padding: 15px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .attendance-table th, 
+            .attendance-table td {
+                padding: 10px 8px;
+                font-size: 0.85rem;
+            }
+            
+            .status {
+                padding: 4px 8px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-user-graduate"></i> نظام متابعة الطلاب - ولي الأمر</h1>
-            <p>ابحث بكود الطالب لمشاهدة بياناته وسجل الحضور</p>
+            <div class="logo">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <h1>نظام متابعة الطلاب - ولي الأمر</h1>
+            <p class="header-description">ابحث بكود الطالب لمشاهدة بياناته وسجل الحضور</p>
         </header>
 
         <div class="search-section">
@@ -237,39 +443,43 @@
 
         <div class="loader" id="loader"></div>
 
-        <div id="studentData" style="display: none;">
+        <div class="student-data" id="studentData">
+            <div class="student-header">
+                <h2 class="student-name" id="studentName"></h2>
+                <p class="student-code" id="studentCodeDisplay"></p>
+            </div>
+            
             <div class="student-info">
-                <h2 id="studentName"></h2>
-                <p id="studentCodeDisplay"></p>
-                
-                <h3>المعلومات الأساسية</h3>
+                <h3 class="section-title">المعلومات الأساسية</h3>
                 <div class="info-grid">
                     <div class="info-item">
                         <span class="label">البريد الإلكتروني:</span>
-                        <span class="value" id="studentEmail"></span>
+                        <span class="value" id="studentEmail">غير متوفر</span>
                     </div>
                     <div class="info-item">
                         <span class="label">رقم الهاتف:</span>
-                        <span class="value" id="studentPhone"></span>
+                        <span class="value" id="studentPhone">غير متوفر</span>
                     </div>
                     <div class="info-item">
                         <span class="label">هاتف ولي الأمر:</span>
-                        <span class="value" id="parentPhone"></span>
+                        <span class="value" id="parentPhone">غير متوفر</span>
                     </div>
                     <div class="info-item">
                         <span class="label">لغة الدراسة:</span>
-                        <span class="value" id="studyLanguage"></span>
+                        <span class="value" id="studyLanguage">غير محدد</span>
                     </div>
                     <div class="info-item">
                         <span class="label">المعاد:</span>
-                        <span class="value" id="studentTime"></span>
+                        <span class="value" id="studentTime">غير محدد</span>
                     </div>
                 </div>
             </div>
             
             <div class="attendance-section">
-                <h3>سجل الحضور والدرجات</h3>
-                <div id="attendanceTable"></div>
+                <h3 class="section-title">سجل الحضور والدرجات</h3>
+                <div class="attendance-table-container">
+                    <div id="attendanceTable" class="no-data">لا توجد سجلات حضور حتى الآن</div>
+                </div>
             </div>
 
             <div class="share-section">
@@ -279,6 +489,10 @@
             </div>
         </div>
     </div>
+
+    <footer>
+        <p>© 2023 نظام متابعة الطلاب - جميع الحقوق محفوظة</p>
+    </footer>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -315,6 +529,13 @@
                 document.getElementById('studentCodeInput').value = studentCode;
                 searchStudent();
             }
+            
+            // إضافة event listener للبحث عند الضغط على Enter
+            document.getElementById('studentCodeInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchStudent();
+                }
+            });
         });
 
         // البحث عن الطالب بالكود
@@ -332,6 +553,7 @@
             }
 
             showLoader();
+            hideStudentData();
             
             try {
                 const doc = await db.collection("students").doc(studentCode).get();
@@ -375,7 +597,7 @@
 
             displayAttendanceTable(currentStudent.attendance || {});
             
-            document.getElementById('studentData').style.display = 'block';
+            showStudentData();
             hideLoader();
         }
 
@@ -434,12 +656,16 @@
                 title: 'رابط مشاركة البيانات',
                 html: `
                     <p>يمكنك مشاركة هذا الرابط مع ولي الأمر:</p>
-                    <input type="text" id="shareLinkInput" value="${shareLink}" readonly style="width:100%; padding:10px; margin:10px 0;">
-                    <button onclick="copyShareLink()" class="btn btn-primary" style="width:100%">
+                    <input type="text" id="shareLinkInput" value="${shareLink}" readonly style="width:100%; padding:12px; margin:15px 0; border-radius: 8px; border: 1px solid #ddd;">
+                    <button onclick="copyShareLink()" class="btn btn-primary" style="width:100%; padding: 12px;">
                         <i class="fas fa-copy"></i> نسخ الرابط
                     </button>
                 `,
-                confirmButtonText: 'تم'
+                confirmButtonText: 'تم',
+                width: '90%',
+                customClass: {
+                    popup: 'custom-swal'
+                }
             });
         }
 
@@ -453,26 +679,27 @@
                 title: 'تم النسخ',
                 text: 'تم نسخ الرابط إلى الحافظة',
                 icon: 'success',
-                confirmButtonText: 'حسناً'
+                confirmButtonText: 'حسناً',
+                timer: 2000
             });
         }
 
-        // إظهار/إخفاء Loader
+        // إظهار/إخفاء Loader وبيانات الطالب
         function showLoader() {
             document.getElementById('loader').style.display = 'block';
-            document.getElementById('studentData').style.display = 'none';
         }
 
         function hideLoader() {
             document.getElementById('loader').style.display = 'none';
         }
 
-        // البحث عند الضغط على Enter
-        document.getElementById('studentCodeInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchStudent();
-            }
-        });
+        function showStudentData() {
+            document.getElementById('studentData').style.display = 'block';
+        }
+
+        function hideStudentData() {
+            document.getElementById('studentData').style.display = 'none';
+        }
     </script>
 </body>
 </html>
