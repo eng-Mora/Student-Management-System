@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام متابعة الطلاب - ولي الأمر</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --background-color: #ecf0f1;
+            --text-color: #333;
+            --light-text: #fff;
+            --border-radius: 10px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: var(--light-text);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--light-text);
+            padding: 25px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .search-section {
+            padding: 25px;
+            background-color: var(--light-text);
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-input-container {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 45px 15px 15px;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background-color: #fff;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-share {
+            background-color: #9b59b6;
+            color: white;
+        }
+
+        .btn-share:hover {
+            background-color: #8e44ad;
+            transform: translateY(-2px);
+        }
+
+        .student-info {
+            padding: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info-item .label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .attendance-section {
+            margin: 30px 0;
+        }
+
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .attendance-table th, .attendance-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .attendance-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .status.present {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .status.absent {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .share-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-user-graduate"></i> نظام متابعة الطلاب - ولي الأمر</h1>
+            <p>ابحث بكود الطالب لمشاهدة بياناته وسجل الحضور</p>
+        </header>
+
+        <div class="search-section">
+            <div class="search-box">
+                <div class="search-input-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="studentCodeInput" placeholder="أدخل كود الطالب..." autocomplete="off">
+                </div>
+                <button class="btn btn-primary" onclick="searchStudent()">
+                    <i class="fas fa-search"></i> بحث
+                </button>
+            </div>
+        </div>
+
+        <div class="loader" id="loader"></div>
+
+        <div id="studentData" style="display: none;">
+            <div class="student-info">
+                <h2 id="studentName"></h2>
+                <p id="studentCodeDisplay"></p>
+                
+                <h3>المعلومات الأساسية</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="label">البريد الإلكتروني:</span>
+                        <span class="value" id="studentEmail"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">رقم الهاتف:</span>
+                        <span class="value" id="studentPhone"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">هاتف ولي الأمر:</span>
+                        <span class="value" id="parentPhone"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">لغة الدراسة:</span>
+                        <span class="value" id="studyLanguage"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">المعاد:</span>
+                        <span class="value" id="studentTime"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="attendance-section">
+                <h3>سجل الحضور والدرجات</h3>
+                <div id="attendanceTable"></div>
+            </div>
+
+            <div class="share-section">
+                <button class="btn btn-share" onclick="generateShareLink()">
+                    <i class="fas fa-share-alt"></i> مشاركة الرابط
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- تهيئة Firebase -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMjDu5-MbOj5qD2LMZcH1LTqEOToOg7Po",
+            authDomain: "moramo-97456.firebaseapp.com",
+            databaseURL: "https://moramo-97456-default-rtdb.firebaseio.com",
+            projectId: "moramo-97456",
+            storageBucket: "moramo-97456.appspot.com",
+            messagingSenderId: "159095175556",
+            appId: "1:159095175556:web:5f44fdd616d4f9c58105d1",
+            measurementId: "G-PK3KEBPFK0"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+
+    <!-- كود الموقع -->
+    <script>
+        let currentStudent = null;
+
+        // عند تحميل الصفحة، التحقق من وجود كود طالب في الرابط
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const studentCode = urlParams.get('code');
+            
+            if (studentCode) {
+                document.getElementById('studentCodeInput').value = studentCode;
+                searchStudent();
+            }
+        });
+
+        // البحث عن الطالب بالكود
+        async function searchStudent() {
+            const studentCode = document.getElementById('studentCodeInput').value.trim();
+            
+            if (!studentCode) {
+                Swal.fire({
+                    title: 'خطأ',
+                    text: 'يرجى إدخال كود الطالب',
+                    icon: 'error',
+                    confirmButtonText: 'حسناً'
+                });
+                return;
+            }
+
+            showLoader();
+            
+            try {
+                const doc = await db.collection("students").doc(studentCode).get();
+                
+                if (doc.exists) {
+                    currentStudent = {
+                        id: doc.id,
+                        ...doc.data()
+                    };
+                    displayStudentData();
+                } else {
+                    hideLoader();
+                    Swal.fire({
+                        title: 'غير موجود',
+                        text: 'لا يوجد طالب بهذا الكود',
+                        icon: 'error',
+                        confirmButtonText: 'حسناً'
+                    });
+                }
+            } catch (error) {
+                hideLoader();
+                console.error("Error getting student:", error);
+                Swal.fire({
+                    title: 'خطأ',
+                    text: 'حدث خطأ أثناء جلب البيانات',
+                    icon: 'error',
+                    confirmButtonText: 'حسناً'
+                });
+            }
+        }
+
+        // عرض بيانات الطالب
+        function displayStudentData() {
+            document.getElementById('studentName').textContent = currentStudent.name;
+            document.getElementById('studentCodeDisplay').textContent = `كود الطالب: ${currentStudent.id}`;
+            document.getElementById('studentEmail').textContent = currentStudent.email || 'غير متوفر';
+            document.getElementById('studentPhone').textContent = currentStudent.phone || 'غير متوفر';
+            document.getElementById('parentPhone').textContent = currentStudent.parentPhone || 'غير متوفر';
+            document.getElementById('studyLanguage').textContent = currentStudent.studyLanguage || 'غير محدد';
+            document.getElementById('studentTime').textContent = currentStudent.time || 'غير محدد';
+
+            displayAttendanceTable(currentStudent.attendance || {});
+            
+            document.getElementById('studentData').style.display = 'block';
+            hideLoader();
+        }
+
+        // عرض جدول الحضور
+        function displayAttendanceTable(attendance) {
+            const tableContainer = document.getElementById('attendanceTable');
+
+            if (Object.keys(attendance).length === 0) {
+                tableContainer.innerHTML = '<p class="no-data">لا توجد سجلات حضور حتى الآن</p>';
+                return;
+            }
+
+            let tableHTML = `
+                <table class="attendance-table">
+                    <thead>
+                        <tr>
+                            <th>الحصة</th>
+                            <th>التاريخ</th>
+                            <th>الحضور</th>
+                            <th>الواجب</th>
+                            <th>الكويز</th>
+                            <th>ملاحظات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            Object.values(attendance).forEach(session => {
+                tableHTML += `
+                    <tr>
+                        <td>${session.sessionNumber}</td>
+                        <td>${session.date || '-'}</td>
+                        <td><span class="status ${session.status === 'حاضر' ? 'present' : 'absent'}">${session.status}</span></td>
+                        <td>${session.homeworkGrade || '-'}</td>
+                        <td>${session.quizGrade || '-'}</td>
+                        <td>${session.notes || '-'}</td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            tableContainer.innerHTML = tableHTML;
+        }
+
+        // توليد رابط المشاركة
+        function generateShareLink() {
+            if (!currentStudent) return;
+
+            const shareLink = `${window.location.origin}${window.location.pathname}?code=${currentStudent.id}`;
+            
+            Swal.fire({
+                title: 'رابط مشاركة البيانات',
+                html: `
+                    <p>يمكنك مشاركة هذا الرابط مع ولي الأمر:</p>
+                    <input type="text" id="shareLinkInput" value="${shareLink}" readonly style="width:100%; padding:10px; margin:10px 0;">
+                    <button onclick="copyShareLink()" class="btn btn-primary" style="width:100%">
+                        <i class="fas fa-copy"></i> نسخ الرابط
+                    </button>
+                `,
+                confirmButtonText: 'تم'
+            });
+        }
+
+        // نسخ الرابط للحافظة
+        function copyShareLink() {
+            const copyText = document.getElementById("shareLinkInput");
+            copyText.select();
+            document.execCommand("copy");
+            
+            Swal.fire({
+                title: 'تم النسخ',
+                text: 'تم نسخ الرابط إلى الحافظة',
+                icon: 'success',
+                confirmButtonText: 'حسناً'
+            });
+        }
+
+        // إظهار/إخفاء Loader
+        function showLoader() {
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('studentData').style.display = 'none';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        // البحث عند الضغط على Enter
+        document.getElementById('studentCodeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchStudent();
+            }
+        });
+    </script>
+</body>
+</html>
